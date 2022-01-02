@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { signupFields } from "./formFields";
+import { addStudentFields } from "./formFields";
+import QRCode from "qrcode";
 
-const SignupSchema = Yup.object().shape({
+const AddStudentSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
   lastName: Yup.string().required("Lastname is required"),
-  email: Yup.string().email("Invalid Email").required("Email is Required"),
-  password: Yup.string()
-    .min(6, "Password is too short")
-    .required("Password is Required"),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref("password"), null],
-    "Passwords must match"
-  ),
+  matricNumber: Yup.string().required("Matric number is Required"),
 });
 
-const Signup = () => {
+const AddStudent = () => {
   const [error, setError] = useState("");
 
-  const handleSignup = async (
-    { firstName, lastName, email, password },
+  const handleAddStudent = async (
+    { firstName, lastName, matricNumber, level, course },
     { setSubmitting }
   ) => {
     try {
       setSubmitting(true);
-      console.log({ firstName, lastName, email, password });
+      const qrCode = await QRCode.toDataURL(matricNumber);
+      console.log({ firstName, lastName, matricNumber, level, course, qrCode });
     } catch (err) {
       setError(err.data);
     }
@@ -36,19 +31,19 @@ const Signup = () => {
       <div className="max-w-md w-full space-y-8 px-12 bg-white py-8 shadow-lg rounded-xl">
         <div>
           <h2 className="mt-6 text-center text-xl sm:text-3xl font-extrabold text-gray-900">
-            Sign up
+            Add new dummy student
           </h2>
         </div>
         <Formik
           initialValues={{
             firstName: "",
             lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
+            matricNumber: "",
+            course: "computer_science",
+            level: "100",
           }}
-          validationSchema={SignupSchema}
-          onSubmit={handleSignup}
+          validationSchema={AddStudentSchema}
+          onSubmit={handleAddStudent}
         >
           {({ isSubmitting, errors, touched }) => (
             <Form>
@@ -57,7 +52,7 @@ const Signup = () => {
                   <div className="text-sm md:text-normal inline">{error}</div>{" "}
                 </div>
               ) : null}
-              {signupFields.map((field) => (
+              {addStudentFields.map((field) => (
                 <div className="my-2" key={field.id}>
                   <label
                     htmlFor={field.name}
@@ -88,6 +83,39 @@ const Signup = () => {
                   />
                 </div>
               ))}
+
+              <div className="my-2">
+                <label htmlFor="course" className="text-gray-500 font-normal">
+                  Course of Study
+                </label>
+                <Field
+                  as="select"
+                  className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
+                  name="course"
+                >
+                  <option value="computer_science">Computer Science</option>
+                  <option value="computer_technology">
+                    Computer Technology
+                  </option>
+                  <option value="mass_comm">Mass communication</option>
+                </Field>
+              </div>
+              <div className="my-2">
+                <label htmlFor="level" className="text-gray-500 font-normal">
+                  Level
+                </label>
+                <Field
+                  as="select"
+                  className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
+                  name="level"
+                >
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                  <option value="300">300</option>
+                  <option value="400">400</option>
+                  <option value="500">500</option>
+                </Field>
+              </div>
               <div className="mt-2">
                 <button
                   type="submit"
@@ -114,4 +142,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AddStudent;

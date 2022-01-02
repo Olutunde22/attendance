@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Login, Signup, Home, Lecturer } from "./routes";
+import { Login, Signup, Home, Lecturer, AddStudent } from "./routes";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <Switch>
           <Route path="/login" exact={true} component={Login} />
           <Route path="/signup" exact={true} component={Signup} />
+          <Route path="/addstudent" exact={true} component={AddStudent} />
           <Route path="/lecturer" exact={true} component={Lecturer} />
 					<Route path="/" component={Home} />
         </Switch>
