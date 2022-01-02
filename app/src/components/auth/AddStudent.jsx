@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { addStudentFields } from "./formFields";
 import QRCode from "qrcode";
+import Axios from "axios";
 
 const AddStudentSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
@@ -17,12 +18,22 @@ const AddStudent = () => {
     { firstName, lastName, matricNumber, level, course },
     { setSubmitting }
   ) => {
+    setSubmitting(true);
     try {
-      setSubmitting(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
       const qrCode = await QRCode.toDataURL(matricNumber);
-      console.log({ firstName, lastName, matricNumber, level, course, qrCode });
+      await Axios.post(
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/login",
+        { firstName, lastName, matricNumber, level, course, qrCode },
+        config
+      );
     } catch (err) {
-      setError(err.data);
+      setError(err.response.data.message);
     }
   };
 
@@ -48,7 +59,7 @@ const AddStudent = () => {
           {({ isSubmitting, errors, touched }) => (
             <Form>
               {error ? (
-                <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100">
+                <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 px-4 py-2 rounded">
                   <div className="text-sm md:text-normal inline">{error}</div>{" "}
                 </div>
               ) : null}

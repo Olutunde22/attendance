@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { signupFields } from "./formFields";
+import Axios from "axios";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
@@ -23,11 +24,20 @@ const Signup = () => {
     { firstName, lastName, email, password },
     { setSubmitting }
   ) => {
+    setSubmitting(true);
     try {
-      setSubmitting(true);
-      console.log({ firstName, lastName, email, password });
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      await Axios.post(
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/signup",
+        { email, password, firstName, lastName },
+        config
+      );
     } catch (err) {
-      setError(err.data);
+      setError(err.response.data.message);
     }
   };
 
@@ -38,6 +48,15 @@ const Signup = () => {
           <h2 className="mt-6 text-center text-xl sm:text-3xl font-extrabold text-gray-900">
             Sign up
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{" "}
+            <a
+              href="/login"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
+                Login here
+            </a>
+          </p>
         </div>
         <Formik
           initialValues={{
