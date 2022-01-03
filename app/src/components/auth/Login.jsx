@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { loginFields } from "./formFields";
 import Axios from "axios";
-
+import { useHistory } from "react-router-dom";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is Required"),
@@ -14,6 +14,7 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const [error, setError] = useState("");
+  let history = useHistory();
   const handleLogin = async ({ email, password }, { setSubmitting }) => {
     setSubmitting(true);
     try {
@@ -22,16 +23,22 @@ const Login = () => {
           "Content-type": "application/json",
         },
       };
-      await Axios.post(
+      const { data } = await Axios.post(
         "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/login",
         { email, password },
         config
       );
-
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      history.push("/lecturer");
     } catch (err) {
       setError(err.response.data.message);
     }
   };
+
+  const userInfo = localStorage.getItem("userInfo");
+  if (userInfo) {
+    history.push("/lecturer");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 xl:px-12 sm:px-6 lg:px-8">
@@ -46,7 +53,7 @@ const Login = () => {
               href="/signup"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-                Create an account
+              Create an account
             </a>
           </p>
         </div>

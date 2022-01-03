@@ -1,10 +1,13 @@
 import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/outline";
+import Axios from "axios";
 
 const Modal = ({ modal, onModalClose }) => {
   const [open, setOpen] = useState(modal);
   const [name, setClassName] = useState("");
+  const [error, setError] = useState("");
+  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const cancelButtonRef = useRef(null);
 
   useEffect(() => {
@@ -15,10 +18,24 @@ const Modal = ({ modal, onModalClose }) => {
     setClassName(e.target.value);
   };
 
-  const handleCreateClass = () =>{
-    console.log(name)
-    return onModalClose(false)
-  }
+  const handleCreateClass = async () => {
+    let userId = userInfo.id;
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      await Axios.post(
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/createclass",
+        { className: name, createdBy: userId },
+        config
+      );
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+    return onModalClose(false);
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -59,6 +76,11 @@ const Modal = ({ modal, onModalClose }) => {
           >
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                {error ? (
+                  <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 m-4 rounded">
+                    <div className="text-sm md:text-normal inline">{error}</div>{" "}
+                  </div>
+                ) : null}
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                     <ExclamationIcon

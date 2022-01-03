@@ -1,15 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Modal from "./Modal";
+import { useHistory } from "react-router-dom";
+import { ExclamationIcon } from "@heroicons/react/outline";
+import Axios from "axios";
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 const navigation = [
   { name: "Classes", href: "#", current: true },
   { name: "Attendance", href: "#", current: false },
@@ -27,10 +24,40 @@ function classNames(...classes) {
 
 const Lecturer = () => {
   const [modal, setModal] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const [error, setError] = useState("");
+  const history = useHistory();
+  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    if (!userInfo) {
+      history.push("/login");
+    }
+  }, [history]);
 
-  const onModalClose = () =>{
-      setModal(false)
-  }
+  const onModalClose = () => {
+    setModal(false);
+  };
+
+  const getClasses = async () => {
+    let userId = userInfo.id;
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await Axios.get(
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/getclasses/" +
+          userId,
+        config
+      );
+      setClasses(data);
+    } catch (err) {
+      setError('Error Occured while trying to get classes, please refresh page or contact administrator');
+    }
+  };
+  getClasses();
   return (
     <>
       <div className="min-h-full">
@@ -71,16 +98,6 @@ const Lecturer = () => {
                     <div className="ml-4 flex items-center md:ml-6">
                       {/* Profile dropdown */}
                       <Menu as="div" className="ml-3 relative">
-                        <div>
-                          <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                            <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
-                              alt=""
-                            />
-                          </Menu.Button>
-                        </div>
                         <Transition
                           as={Fragment}
                           enter="transition ease-out duration-100"
@@ -148,21 +165,12 @@ const Lecturer = () => {
                   ))}
                 </div>
                 <div className="pt-4 pb-3 border-t border-gray-700">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
+                  <div className="items-center px-5">
+                    <div className="text-base font-medium leading-none text-white mb-2">
+                      Hello, {userInfo.firstName}
                     </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium leading-none text-gray-400">
-                        {user.email}
-                      </div>
+                    <div className="text-sm font-medium leading-none text-gray-400">
+                      {userInfo.email}
                     </div>
                   </div>
                   <div className="mt-3 px-2 space-y-1">
@@ -187,19 +195,30 @@ const Lecturer = () => {
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Classes</h1>
             <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setModal(true)}
-              >
-                {" "}
-                Create New Class
-              </button>
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => setModal(true)}
+            >
+              {" "}
+              Create New Class
+            </button>
           </div>
         </header>
         <main>
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             {/* Replace with your content */}
             <div className="px-4 py-6 sm:px-0">
-              
+              {error ? (
+                <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 m-4 rounded">
+                  <div className="text-sm md:text-normal inline items-center justify-center">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <ExclamationIcon
+                      className="h-6 w-6 text-red-600"
+                      aria-hidden="true"
+                    />
+                  </div>
+                    {error}</div>{" "}
+                </div>
+              ) : null}
             </div>
             {/* /End replace */}
           </div>

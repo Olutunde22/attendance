@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { signupFields } from "./formFields";
 import Axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
@@ -19,7 +20,7 @@ const SignupSchema = Yup.object().shape({
 
 const Signup = () => {
   const [error, setError] = useState("");
-
+  let history = useHistory();
   const handleSignup = async (
     { firstName, lastName, email, password },
     { setSubmitting }
@@ -31,15 +32,22 @@ const Signup = () => {
           "Content-type": "application/json",
         },
       };
-      await Axios.post(
+      const { data } = await Axios.post(
         "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/signup",
         { email, password, firstName, lastName },
         config
       );
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      history.push("/lecturer");
     } catch (err) {
       setError(err.response.data.message);
     }
   };
+
+  const userInfo = localStorage.getItem("userInfo");
+  if (userInfo) {
+    history.push("/lecturer");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 xl:px-12 sm:px-6 lg:px-8">
@@ -54,7 +62,7 @@ const Signup = () => {
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-                Login here
+              Login here
             </a>
           </p>
         </div>

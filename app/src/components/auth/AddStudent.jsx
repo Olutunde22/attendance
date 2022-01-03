@@ -25,10 +25,9 @@ const AddStudent = () => {
           "Content-type": "application/json",
         },
       };
-
       const qrCode = await QRCode.toDataURL(matricNumber);
       await Axios.post(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/login",
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/addstudent",
         { firstName, lastName, matricNumber, level, course, qrCode },
         config
       );
