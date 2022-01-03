@@ -2,16 +2,23 @@ import React from "react";
 import moment from "moment";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 
-const ViewParticipants = ({ setViewPage, participants }) => {
+const ViewParticipants = ({ setViewPage, participants, className }) => {
   return (
     <div className="flex flex-col">
-      <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+      <div className="flex-shrink-0 flex h-12 mx-4 rounded-full">
         <ArrowLeftIcon
           onClick={() => setViewPage("viewclass")}
-          className="h-6 w-6 text-blue-600"
+          className="h-6 w-6 text-blue-600 cursor-pointer"
           aria-hidden="true"
         />
+        <h2
+          onClick={() => setViewPage("viewclass")}
+          className="text-xl -mt-1 ml-4 cursor-pointer "
+        >
+          {className}
+        </h2>
       </div>
+
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -95,7 +102,7 @@ const ViewParticipants = ({ setViewPage, participants }) => {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500">
-                        {moment(part.time).format("MMMM Do YYYY, h:mm:ss a")}
+                        {moment(part.time).format("MMMM Do YYYY, h:mm a")}
                       </div>
                     </td>
                   </tr>

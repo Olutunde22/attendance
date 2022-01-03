@@ -28,6 +28,7 @@ const Lecturer = () => {
   const [participants, setParticipants] = useState({});
   const [error, setError] = useState("");
   const [classId, setClassId] = useState("");
+  const [className, setClassName] = useState("")
   const [viewPage, setViewPage] = useState("viewclass");
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -254,12 +255,17 @@ const Lecturer = () => {
                 classes={classes}
                 setQrModal={setQrModal}
                 setClassId={setClassId}
+                setClassName={setClassName}
                 setViewPage={setViewPage}
                 getParticipants={getParticipants}
               />
             ) : null}
             {viewPage === "viewparticipants" ? (
-              <ViewParticipants setViewPage={setViewPage} participants={participants} />
+              <ViewParticipants
+                setViewPage={setViewPage}
+                className={className}
+                participants={participants}
+              />
             ) : null}
           </div>
         </main>
