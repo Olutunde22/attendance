@@ -4,14 +4,12 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Modal from "./Modal";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import Axios from "axios";
-import moment from "moment";
 import { useHistory } from "react-router-dom";
+import QRModal from "./QRModal";
+import ViewClass from "./ViewClass";
+import ViewParticipants from "./ViewParticipants";
 
-const navigation = [
-  { name: "Classes", href: "#", current: true },
-  { name: "Attendance", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-];
+const navigation = [{ name: "Classes", href: "#", current: true }];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
@@ -24,9 +22,13 @@ function classNames(...classes) {
 
 const Lecturer = () => {
   const [modal, setModal] = useState(false);
+  const [qrModal, setQrModal] = useState(false);
   let history = useHistory();
   const [classes, setClasses] = useState([]);
+  const [participants, setParticipants] = useState({});
   const [error, setError] = useState("");
+  const [classId, setClassId] = useState("");
+  const [viewPage, setViewPage] = useState("viewclass");
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const getClasses = async () => {
@@ -42,7 +44,6 @@ const Lecturer = () => {
           userId,
         config
       );
-      console.log(data);
       setClasses(data);
     } catch (err) {
       setError(
@@ -51,15 +52,36 @@ const Lecturer = () => {
     }
   };
 
+  const getParticipants = async (classId) => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await Axios.get(
+        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/getclassparticipants/" +
+          classId,
+        config
+      );
+      setParticipants(data.participants);
+      setViewPage("viewparticipants");
+    } catch (err) {
+      setError("Error Occured while trying to get class Participants");
+    }
+  };
+
   const onModalClose = () => {
     setModal(false);
+    setQrModal(false);
   };
 
   useEffect(() => {
     if (userInfo) {
       getClasses();
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewPage]);
 
   if (!userInfo) {
     history.push("/login");
@@ -212,7 +234,6 @@ const Lecturer = () => {
         </header>
         <main>
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            {/* Replace with your content */}
             <div className="px-4 py-6 sm:px-0">
               {error ? (
                 <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 m-4 rounded">
@@ -228,74 +249,26 @@ const Lecturer = () => {
                 </div>
               ) : null}
             </div>
-            {classes.length > 0 ? (
-              <div className="flex flex-col">
-                <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                  <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th
-                              scope="col"
-                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                              Class Name
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                              Number of Students attended
-                            </th>
-
-                            <th
-                              scope="col"
-                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                              Date Created
-                            </th>
-                            <th scope="col" className="relative px-6 py-3">
-                              <span className="sr-only">Edit</span>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {classes.map((cla) => (
-                            <tr key={cla.id}>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="ml-4">
-                                    <div className="text-sm font-medium text-gray-900">
-                                      {cla.className}
-                                    </div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {cla.participants}
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {moment(cla.createdAt).format(
-                                  "MMMM Do YYYY, h:mm:ss a"
-                                )}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                Add student basically scanning
-                              </td>
-                            </tr>
-                          )).reverse()}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {viewPage === "viewclass" && classes.length > 0 ? (
+              <ViewClass
+                classes={classes}
+                setQrModal={setQrModal}
+                setClassId={setClassId}
+                setViewPage={setViewPage}
+                getParticipants={getParticipants}
+              />
+            ) : null}
+            {viewPage === "viewparticipants" ? (
+              <ViewParticipants setViewPage={setViewPage} participants={participants} />
             ) : null}
           </div>
         </main>
+        <QRModal
+          modal={qrModal}
+          onModalClose={onModalClose}
+          getClasses={getClasses}
+          classId={classId}
+        />
         <Modal
           modal={modal}
           onModalClose={onModalClose}

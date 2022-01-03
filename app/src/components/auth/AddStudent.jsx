@@ -49,7 +49,7 @@ const AddStudent = () => {
             firstName: "",
             lastName: "",
             matricNumber: "",
-            course: "computer_science",
+            course: "Computer Science",
             level: "100",
           }}
           validationSchema={AddStudentSchema}
@@ -103,11 +103,11 @@ const AddStudent = () => {
                   className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
                   name="course"
                 >
-                  <option value="computer_science">Computer Science</option>
-                  <option value="computer_technology">
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Computer Technology">
                     Computer Technology
                   </option>
-                  <option value="mass_comm">Mass communication</option>
+                  <option value="Mass Communication">Mass communication</option>
                 </Field>
               </div>
               <div className="my-2">
