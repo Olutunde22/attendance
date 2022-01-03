@@ -27,7 +27,7 @@ const Modal = ({ modal, onModalClose, getClasses }) => {
         },
       };
       const { data } = await Axios.post(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/createclass",
+        "https://attendancebe.herokuapp.com/api/createclass",
         { className: name, createdBy: userId },
         config
       );
@@ -35,8 +35,11 @@ const Modal = ({ modal, onModalClose, getClasses }) => {
         onModalClose(false);
         getClasses();
       }
-    } catch (err) {
+    }catch (err) {
       setError(err.response.data.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
 

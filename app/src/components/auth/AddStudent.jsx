@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { addStudentFields } from "./formFields";
 import QRCode from "qrcode";
 import Axios from "axios";
+import ImageModal from "./ImageModal";
 
 const AddStudentSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
@@ -13,6 +14,9 @@ const AddStudentSchema = Yup.object().shape({
 
 const AddStudent = () => {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [link, setLink] = useState("");
+  const [modal, setModal] = useState(false);
 
   const handleAddStudent = async (
     { firstName, lastName, matricNumber, level, course },
@@ -26,14 +30,31 @@ const AddStudent = () => {
         },
       };
       const qrCode = await QRCode.toDataURL(matricNumber);
-      await Axios.post(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/addstudent",
+      const { data } = await Axios.post(
+        "https://attendancebe.herokuapp.com/api/addstudent",
         { firstName, lastName, matricNumber, level, course, qrCode },
         config
       );
+      if (data.message === "Success") {
+        setLink(qrCode);
+        setModal(true)
+        setSuccess(
+          "Congratulations, your Qr code has been generated, clikc to download"
+        );
+        setTimeout(() => {
+          setSuccess("");
+        }, 10000);
+      }
     } catch (err) {
       setError(err.response.data.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
+  };
+
+  const onModalClose = () => {
+    setModal(false);
   };
 
   return (
@@ -60,6 +81,11 @@ const AddStudent = () => {
               {error ? (
                 <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 px-4 py-2 rounded">
                   <div className="text-sm md:text-normal inline">{error}</div>{" "}
+                </div>
+              ) : null}
+              {success ? (
+                <div className="transform motion-safe:hover:scale-110 flex text-green-700 bg-green-100 px-4 py-2 rounded">
+                  <div className="text-sm md:text-normal inline">{success}</div>{" "}
                 </div>
               ) : null}
               {addStudentFields.map((field) => (
@@ -148,6 +174,8 @@ const AddStudent = () => {
           )}
         </Formik>
       </div>
+
+      <ImageModal modal={modal} onModalClose={onModalClose} link={link} />
     </div>
   );
 };

@@ -16,7 +16,7 @@ export const addStudentFields = [
         label: 'Matric Number',
         name: 'matricNumber',
         type: 'text'
-    }
+    },
 ];
 
 export const signupFields = [

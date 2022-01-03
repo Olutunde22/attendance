@@ -10,11 +10,7 @@ import ViewClass from "./ViewClass";
 import ViewParticipants from "./ViewParticipants";
 
 const navigation = [{ name: "Classes", href: "#", current: true }];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+const userNavigation = [{ name: "Your Profile", href: "#" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -28,9 +24,16 @@ const Lecturer = () => {
   const [participants, setParticipants] = useState({});
   const [error, setError] = useState("");
   const [classId, setClassId] = useState("");
-  const [className, setClassName] = useState("")
+  const [className, setClassName] = useState("");
   const [viewPage, setViewPage] = useState("viewclass");
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  useEffect(() => {
+    if (userInfo !== null) {
+      getClasses();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewPage]);
 
   const getClasses = async () => {
     let userId = userInfo.id;
@@ -41,8 +44,7 @@ const Lecturer = () => {
         },
       };
       const { data } = await Axios.get(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/getclasses/" +
-          userId,
+        "https://attendancebe.herokuapp.com/api/getclasses/" + userId,
         config
       );
       setClasses(data);
@@ -50,7 +52,17 @@ const Lecturer = () => {
       setError(
         "Error Occured while trying to get classes, please refresh page or contact administrator"
       );
+        setTimeout(() => {
+          setError("");
+        }, 2000);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    setTimeout(() => {
+      history.push("/");
+    }, 1000);
   };
 
   const getParticipants = async (classId) => {
@@ -61,7 +73,7 @@ const Lecturer = () => {
         },
       };
       const { data } = await Axios.get(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/getclassparticipants/" +
+        "https://attendancebe.herokuapp.com/api/getclassparticipants/" +
           classId,
         config
       );
@@ -69,6 +81,9 @@ const Lecturer = () => {
       setViewPage("viewparticipants");
     } catch (err) {
       setError("Error Occured while trying to get class Participants");
+        setTimeout(() => {
+          setError("");
+        }, 2000);
     }
   };
 
@@ -76,17 +91,6 @@ const Lecturer = () => {
     setModal(false);
     setQrModal(false);
   };
-
-  useEffect(() => {
-    if (userInfo) {
-      getClasses();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewPage]);
-
-  if (!userInfo) {
-    history.push("/login");
-  }
 
   return (
     <>
@@ -106,21 +110,12 @@ const Lecturer = () => {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className={classNames(
-                              item.current
-                                ? "bg-gray-900 text-white"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "px-3 py-2 rounded-md text-sm font-medium"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </a>
-                        ))}
+                        <a
+                          href="/lecturer"
+                          className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                        >
+                          Classes
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -128,6 +123,14 @@ const Lecturer = () => {
                     <div className="ml-4 flex items-center md:ml-6">
                       {/* Profile dropdown */}
                       <Menu as="div" className="ml-3 relative">
+                        <div>
+                          <button
+                            onClick={handleLogout}
+                            className=" bg-red-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                          >
+                            Logout
+                          </button>
+                        </div>
                         <Transition
                           as={Fragment}
                           enter="transition ease-out duration-100"
@@ -214,6 +217,12 @@ const Lecturer = () => {
                         {item.name}
                       </Disclosure.Button>
                     ))}
+                    <button
+                      onClick={handleLogout}
+                      className=" bg-red-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Logout
+                    </button>
                   </div>
                 </div>
               </Disclosure.Panel>

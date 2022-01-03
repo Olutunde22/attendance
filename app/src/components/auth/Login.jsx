@@ -24,14 +24,17 @@ const Login = () => {
         },
       };
       const { data } = await Axios.post(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/login",
+        "https://attendancebe.herokuapp.com/api/login",
         { email, password },
         config
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
       history.push("/lecturer");
-    } catch (err) {
+    }catch (err) {
       setError(err.response.data.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
 

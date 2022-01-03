@@ -5,6 +5,7 @@ import { signupFields } from "./formFields";
 import Axios from "axios";
 import { useHistory } from "react-router-dom";
 
+
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
   lastName: Yup.string().required("Lastname is required"),
@@ -33,7 +34,7 @@ const Signup = () => {
         },
       };
       const { data } = await Axios.post(
-        "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/signup",
+        "https://attendancebe.herokuapp.com/api/signup",
         { email, password, firstName, lastName },
         config
       );
@@ -41,8 +42,13 @@ const Signup = () => {
       history.push("/lecturer");
     } catch (err) {
       setError(err.response.data.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
+
+
 
   const userInfo = localStorage.getItem("userInfo");
   if (userInfo) {
