@@ -1,11 +1,11 @@
-/* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Modal from "./Modal";
-import { useHistory } from "react-router-dom";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import Axios from "axios";
+import moment from "moment";
+import { useHistory } from "react-router-dom";
 
 const navigation = [
   { name: "Classes", href: "#", current: true },
@@ -24,20 +24,10 @@ function classNames(...classes) {
 
 const Lecturer = () => {
   const [modal, setModal] = useState(false);
+  let history = useHistory();
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState("");
-  const history = useHistory();
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-    if (!userInfo) {
-      history.push("/login");
-    }
-  }, [history]);
-
-  const onModalClose = () => {
-    setModal(false);
-  };
 
   const getClasses = async () => {
     let userId = userInfo.id;
@@ -52,12 +42,29 @@ const Lecturer = () => {
           userId,
         config
       );
+      console.log(data);
       setClasses(data);
     } catch (err) {
-      setError('Error Occured while trying to get classes, please refresh page or contact administrator');
+      setError(
+        "Error Occured while trying to get classes, please refresh page or contact administrator"
+      );
     }
   };
-  getClasses();
+
+  const onModalClose = () => {
+    setModal(false);
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      getClasses();
+    }
+  }, []);
+
+  if (!userInfo) {
+    history.push("/login");
+  }
+
   return (
     <>
       <div className="min-h-full">
@@ -210,20 +217,90 @@ const Lecturer = () => {
               {error ? (
                 <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 m-4 rounded">
                   <div className="text-sm md:text-normal inline items-center justify-center">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <ExclamationIcon
-                      className="h-6 w-6 text-red-600"
-                      aria-hidden="true"
-                    />
-                  </div>
-                    {error}</div>{" "}
+                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <ExclamationIcon
+                        className="h-6 w-6 text-red-600"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {error}
+                  </div>{" "}
                 </div>
               ) : null}
             </div>
-            {/* /End replace */}
+            {classes.length > 0 ? (
+              <div className="flex flex-col">
+                <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              Class Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              Number of Students attended
+                            </th>
+
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              Date Created
+                            </th>
+                            <th scope="col" className="relative px-6 py-3">
+                              <span className="sr-only">Edit</span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {classes.map((cla) => (
+                            <tr key={cla.id}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <div className="ml-4">
+                                    <div className="text-sm font-medium text-gray-900">
+                                      {cla.className}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-500">
+                                  {cla.participants}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {moment(cla.createdAt).format(
+                                  "MMMM Do YYYY, h:mm:ss a"
+                                )}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                Add student basically scanning
+                              </td>
+                            </tr>
+                          )).reverse()}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
         </main>
-        <Modal modal={modal} onModalClose={onModalClose} />
+        <Modal
+          modal={modal}
+          onModalClose={onModalClose}
+          getClasses={getClasses}
+        />
       </div>
     </>
   );

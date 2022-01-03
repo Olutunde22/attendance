@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import Axios from "axios";
 
-const Modal = ({ modal, onModalClose }) => {
+const Modal = ({ modal, onModalClose, getClasses }) => {
   const [open, setOpen] = useState(modal);
   const [name, setClassName] = useState("");
   const [error, setError] = useState("");
@@ -26,15 +26,18 @@ const Modal = ({ modal, onModalClose }) => {
           "Content-type": "application/json",
         },
       };
-      await Axios.post(
+      const { data } = await Axios.post(
         "https://3000-copper-damselfly-vwfk70rf.ws-eu25.gitpod.io/api/createclass",
         { className: name, createdBy: userId },
         config
       );
+      if (data.message === "Success") {
+        onModalClose(false);
+        getClasses();
+      }
     } catch (err) {
       setError(err.response.data.message);
     }
-    return onModalClose(false);
   };
 
   return (
