@@ -136,7 +136,7 @@ const Signup = () => {
                       {" "}
                     </svg>
                   ) : null}
-                  {isSubmitting ? "Adding..." : "Add student"}
+                  {isSubmitting ? "Signing up..." : "Sign up"}
                 </button>
               </div>
             </Form>
