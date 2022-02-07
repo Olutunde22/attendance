@@ -56,7 +56,7 @@ const ImageModal = ({ modal, onModalClose, link }) => {
                       as="h3"
                       className="text-lg leading-6 font-medium text-gray-900"
                     >
-                      QR CODE
+                      BARCODE
                     </Dialog.Title>
                     <div className="mt-4">
                       {link ? (
