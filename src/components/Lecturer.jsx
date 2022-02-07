@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import Axios from "axios";
 import { useHistory } from "react-router-dom";
-import QRModal from "./QRModal";
+import BarCode from "./BarCodeModal";
 import ViewClass from "./ViewClass";
 import ViewParticipants from "./ViewParticipants";
 
@@ -18,7 +18,7 @@ function classNames(...classes) {
 
 const Lecturer = () => {
   const [modal, setModal] = useState(false);
-  const [qrModal, setQrModal] = useState(false);
+  const [BarCodeModal, setBarCodeModal] = useState(false);
   let history = useHistory();
   const [classes, setClasses] = useState([]);
   const [participants, setParticipants] = useState({});
@@ -52,9 +52,9 @@ const Lecturer = () => {
       setError(
         "Error Occured while trying to get classes, please refresh page or contact administrator"
       );
-        setTimeout(() => {
-          setError("");
-        }, 2000);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
 
@@ -81,15 +81,15 @@ const Lecturer = () => {
       setViewPage("viewparticipants");
     } catch (err) {
       setError("Error Occured while trying to get class Participants");
-        setTimeout(() => {
-          setError("");
-        }, 2000);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
 
   const onModalClose = () => {
     setModal(false);
-    setQrModal(false);
+    setBarCodeModal(false);
   };
 
   return (
@@ -262,7 +262,7 @@ const Lecturer = () => {
             {viewPage === "viewclass" && classes.length > 0 ? (
               <ViewClass
                 classes={classes}
-                setQrModal={setQrModal}
+                setBarCodeModal={setBarCodeModal}
                 setClassId={setClassId}
                 setClassName={setClassName}
                 setViewPage={setViewPage}
@@ -278,8 +278,8 @@ const Lecturer = () => {
             ) : null}
           </div>
         </main>
-        <QRModal
-          modal={qrModal}
+        <BarCode
+          modal={BarCodeModal}
           onModalClose={onModalClose}
           getClasses={getClasses}
           classId={classId}

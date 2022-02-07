@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-const ViewClass = ({ classes, setQrModal, setClassId, getParticipants, setClassName }) => {
+const ViewClass = ({ classes, setBarCodeModal, setClassId, getParticipants, setClassName }) => {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -69,7 +69,7 @@ const ViewClass = ({ classes, setQrModal, setClassId, getParticipants, setClassN
                             type="button"
                             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                             onClick={() => {
-                              setQrModal(true);
+                              setBarCodeModal(true);
                               setClassId(cla.id);
                             }}
                           >

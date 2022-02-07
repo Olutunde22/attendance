@@ -1,9 +1,9 @@
 import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import QrReader from "react-qr-reader";
+import BarcodeReader from "react-barcode-reader";
 import Axios from "axios";
 
-const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
+const BarCodeModal = ({ modal, onModalClose, getClasses, classId }) => {
   const [open, setOpen] = useState(modal);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -45,7 +45,7 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
   };
 
   const handleError = () => {
-    setError("Error Couldn't scan Qr Code");
+    setError("Error Couldn't scan Bar Code");
     setTimeout(() => {
       setError("");
     }, 2000);
@@ -109,14 +109,12 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
                       as="h3"
                       className="text-lg leading-6 font-medium text-gray-900"
                     >
-                      Scan QR Code
+                      Scan Barcode Code
                     </Dialog.Title>
-                    <div className="mt-4 h-40">
-                      <QrReader
-                        delay={300}
-                        style={{ width: "100%" }}
-                        onError={handleError}
+                    <div className="mt-4 h-96">
+                      <BarcodeReader
                         onScan={handleScan}
+                        onError={handleError}
                       />
                     </div>
                   </div>
@@ -140,4 +138,4 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
   );
 };
 
-export default QRModal;
+export default BarCodeModal;

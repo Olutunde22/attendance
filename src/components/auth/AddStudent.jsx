@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { addStudentFields } from "./formFields";
-import QRCode from "qrcode";
 import Axios from "axios";
 import ImageModal from "./ImageModal";
+import { useBarcode } from "react-barcodes";
 
 const AddStudentSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
@@ -17,6 +17,15 @@ const AddStudent = () => {
   const [success, setSuccess] = useState("");
   const [link, setLink] = useState("");
   const [modal, setModal] = useState(false);
+  const [barcode, setBarcode] = useState("00/0000");
+
+  const { inputRef } = useBarcode({
+    value: barcode,
+    options: {
+      background: "#ffffff",
+      displayValue: false,
+    },
+  });
 
   const handleAddStudent = async (
     { firstName, lastName, matricNumber, level, course },
@@ -29,7 +38,9 @@ const AddStudent = () => {
           "Content-type": "application/json",
         },
       };
-      const qrCode = await QRCode.toDataURL(matricNumber);
+      setBarcode(matricNumber);
+      const canvas = document.getElementById("mybarcode");
+      const qrCode = await canvas.toDataURL("image/png");
       const { data } = await Axios.post(
         "https://attendancebe.herokuapp.com/api/addstudent",
         { firstName, lastName, matricNumber, level, course, qrCode },
@@ -37,9 +48,9 @@ const AddStudent = () => {
       );
       if (data.message === "Success") {
         setLink(qrCode);
-        setModal(true)
+        setModal(true);
         setSuccess(
-          "Congratulations, your Qr code has been generated, clikc to download"
+          "Congratulations, your Bar code has been generated, clikc to download"
         );
         setTimeout(() => {
           setSuccess("");
@@ -169,6 +180,7 @@ const AddStudent = () => {
                   ) : null}
                   {isSubmitting ? "Adding..." : "Add student"}
                 </button>
+                <canvas className="hidden" id="mybarcode" ref={inputRef} />
               </div>
             </Form>
           )}
