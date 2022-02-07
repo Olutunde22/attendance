@@ -103,20 +103,15 @@ const BarCodeModal = ({ modal, onModalClose, getClasses, classId }) => {
                     </div>{" "}
                   </div>
                 ) : null}
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 mt-2 sm:ml-4 sm:text-left">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg leading-6 font-medium text-gray-900"
-                    >
-                      Scan Barcode Code
-                    </Dialog.Title>
-                    <div className="mt-4 h-96">
-                      <BarcodeReader
-                        onScan={handleScan}
-                        onError={handleError}
-                      />
-                    </div>
+                <div className="mt-3 text-center sm:mt-0 mt-2 sm:ml-4 sm:text-left">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg leading-6 font-medium text-gray-900"
+                  >
+                    Scan Barcode Code
+                  </Dialog.Title>
+                  <div className="mt-4 h-96">
+                    <BarcodeReader onScan={handleScan} onError={handleError} />
                   </div>
                 </div>
               </div>
