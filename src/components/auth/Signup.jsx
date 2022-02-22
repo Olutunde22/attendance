@@ -9,7 +9,7 @@ const SignupSchema = Yup.object().shape({
 	firstName: Yup.string().required('Firstname is required'),
 	lastName: Yup.string().required('Lastname is required'),
 	email: Yup.string().email('Invalid Email').required('Email is Required'),
-  department: Yup.string().required('Please select a department'),
+	department: Yup.string().required('Please select a department'),
 	password: Yup.string().min(6, 'Password is too short').required('Password is Required'),
 	confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
@@ -17,7 +17,10 @@ const SignupSchema = Yup.object().shape({
 const Signup = () => {
 	const [error, setError] = useState('');
 	let history = useHistory();
-	const handleSignup = async ({ firstName, lastName, email, password, department }, { setSubmitting }) => {
+	const handleSignup = async (
+		{ firstName, lastName, email, password, department },
+		{ setSubmitting }
+	) => {
 		setSubmitting(true);
 		try {
 			const config = {
@@ -66,7 +69,7 @@ const Signup = () => {
 						email: '',
 						password: '',
 						confirmPassword: '',
-            department: 'Computer Science',
+						department: 'Computer Science',
 					}}
 					validationSchema={SignupSchema}
 					onSubmit={handleSignup}
@@ -81,15 +84,20 @@ const Signup = () => {
 							{signupFields.map((field, idx) => (
 								<div className="my-2" key={field.id}>
 									{idx === 3 && (
-										<Field
-											as="select"
-											className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
-											name="department"
-										>
-											<option value="Computer Science">Computer Science</option>
-											<option value="Computer Technology">Computer Technology</option>
-											<option value="Mass Communication">Mass communication</option>
-										</Field>
+										<div className="my-2">
+											<label htmlFor="course" className="text-gray-500 font-normal">
+												Course of Study
+											</label>
+											<Field
+												as="select"
+												className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
+												name="department"
+											>
+												<option value="Computer Science">Computer Science</option>
+												<option value="Computer Technology">Computer Technology</option>
+												<option value="Mass Communication">Mass communication</option>
+											</Field>
+										</div>
 									)}
 									<label htmlFor={field.name} className="text-gray-500 font-normal">
 										{field.label}
