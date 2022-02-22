@@ -10,6 +10,7 @@ const SignupSchema = Yup.object().shape({
   firstName: Yup.string().required("Firstname is required"),
   lastName: Yup.string().required("Lastname is required"),
   email: Yup.string().email("Invalid Email").required("Email is Required"),
+  department: Yup.string().required("Department is required"),
   password: Yup.string()
     .min(6, "Password is too short")
     .required("Password is Required"),
@@ -23,7 +24,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   let history = useHistory();
   const handleSignup = async (
-    { firstName, lastName, email, password },
+    { firstName, lastName, email, password, department },
     { setSubmitting }
   ) => {
     setSubmitting(true);
@@ -77,6 +78,7 @@ const Signup = () => {
             firstName: "",
             lastName: "",
             email: "",
+            department: "Computer Science",
             password: "",
             confirmPassword: "",
           }}
@@ -90,8 +92,24 @@ const Signup = () => {
                   <div className="text-sm md:text-normal inline">{error}</div>{" "}
                 </div>
               ) : null}
-              {signupFields.map((field) => (
+              {signupFields.map((field, idx) => (
                 <div className="my-2" key={field.id}>
+                  {idx === 3 && (
+										<div className="my-2">
+											<label htmlFor="course" className="text-gray-500 font-normal">
+												Department
+											</label>
+											<Field
+												as="select"
+												className="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-gray-900 rounded-lg focus:outline-none  focus:z-10 sm:text-sm shadow-sm"
+												name="department"
+											>
+												<option value="Computer Science">Computer Science</option>
+												<option value="Computer Technology">Computer Technology</option>
+												<option value="Mass Communication">Mass communication</option>
+											</Field>
+										</div>
+									)}
                   <label
                     htmlFor={field.name}
                     className="text-gray-500 font-normal"
