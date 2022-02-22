@@ -86,7 +86,7 @@ const Signup = () => {
 									{idx === 3 && (
 										<div className="my-2">
 											<label htmlFor="course" className="text-gray-500 font-normal">
-												Course of Study
+												Department
 											</label>
 											<Field
 												as="select"
