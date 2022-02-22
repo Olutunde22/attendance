@@ -40,14 +40,14 @@ const AddStudent = () => {
       };
       setBarcode(matricNumber);
       const canvas = document.getElementById("mybarcode");
-      const qrCode = await canvas.toDataURL("image/png");
+      const barCode = await canvas.toDataURL("image/png");
       const { data } = await Axios.post(
         "https://attendancebe.herokuapp.com/api/addstudent",
-        { firstName, lastName, matricNumber, level, course, qrCode },
+        { firstName, lastName, matricNumber, level, course, barCode },
         config
       );
       if (data.message === "Success") {
-        setLink(qrCode);
+        setLink(barCode);
         setModal(true);
         setSuccess(
           "Congratulations, your Bar code has been generated, clikc to download"
