@@ -34,7 +34,7 @@ const Signup = () => {
         },
       };
       const { data } = await Axios.post(
-        "https://attendancebe.herokuapp.com/api/signup",
+        "https://attendanceqrbe.herokuapp.com/api/signup",
         { email, password, firstName, lastName },
         config
       );

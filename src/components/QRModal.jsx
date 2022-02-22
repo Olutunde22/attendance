@@ -22,7 +22,7 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
           },
         };
         const { data } = await Axios.post(
-          "https://attendancebe.herokuapp.com/api/addtoclass",
+          "https://attendanceqrbe.herokuapp.com/api/addtoclass",
           { studentId: result, classId },
           config
         );

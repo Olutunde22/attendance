@@ -24,7 +24,7 @@ const Login = () => {
         },
       };
       const { data } = await Axios.post(
-        "https://attendancebe.herokuapp.com/api/login",
+        "https://attendanceqrbe.herokuapp.com/api/login",
         { email, password },
         config
       );

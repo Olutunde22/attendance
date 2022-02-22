@@ -27,7 +27,7 @@ const Modal = ({ modal, onModalClose, getClasses }) => {
         },
       };
       const { data } = await Axios.post(
-        "https://attendancebe.herokuapp.com/api/createclass",
+        "https://attendanceqrbe.herokuapp.com/api/createclass",
         { className: name, createdBy: userId },
         config
       );

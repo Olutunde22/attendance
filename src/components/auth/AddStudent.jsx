@@ -31,7 +31,7 @@ const AddStudent = () => {
       };
       const qrCode = await QRCode.toDataURL(matricNumber);
       const { data } = await Axios.post(
-        "https://attendancebe.herokuapp.com/api/addstudent",
+        "https://attendanceqrbe.herokuapp.com/api/addstudent",
         { firstName, lastName, matricNumber, level, course, qrCode },
         config
       );
