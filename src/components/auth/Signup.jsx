@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { signupFields } from "./formFields";
 import Axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const SignupSchema = Yup.object().shape({
@@ -22,7 +22,7 @@ const SignupSchema = Yup.object().shape({
 
 const Signup = () => {
   const [error, setError] = useState("");
-  let history = useHistory();
+  let navigate = useNavigate();
   const handleSignup = async (
     { firstName, lastName, email, password, department },
     { setSubmitting }
@@ -36,11 +36,11 @@ const Signup = () => {
       };
       const { data } = await Axios.post(
         "https://attendancebe.herokuapp.com/api/signup",
-        { email, password, firstName, lastName },
+        { email, password, firstName, lastName, department },
         config
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
-      history.push("/lecturer");
+      navigate("/lecturer");
     } catch (err) {
       setError(err.response.data.message);
       setTimeout(() => {
