@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Login, Signup, Lecturer, AddStudent, ForgotPassword, ResetPassword } from './routes';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
 	return (
@@ -19,13 +19,13 @@ function App() {
 				}
 			>
 				<Routes>
+					<Route path="/" exact component={Login} />
 					<Route path="/login" exact component={Login} />
 					<Route path="/signup" exact component={Signup} />
 					<Route path="/forgot" exact component={ForgotPassword} />
 					<Route path="/reset/:resetId" component={ResetPassword} />
 					<Route path="/addstudent" exact component={AddStudent} />
 					<Route path="/lecturer" exact component={Lecturer} />
-					<Route path="*" element={<Navigate to="/login" replace />} />
 				</Routes>
 			</Suspense>
 		</Router>
