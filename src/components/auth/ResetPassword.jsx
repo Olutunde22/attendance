@@ -42,7 +42,6 @@ const ResetPassword = () => {
 	};
 
 	return (
-		<Layout>
 			<div className="h-full flex items-center justify-center bg-gray-100 py-12 px-4 xl:px-12 sm:px-6 lg:px-8">
 				{error ? (
 					<div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 rounded">
@@ -128,7 +127,6 @@ const ResetPassword = () => {
 					</Formik>
 				</div>
 			</div>
-		</Layout>
 	);
 };
 
