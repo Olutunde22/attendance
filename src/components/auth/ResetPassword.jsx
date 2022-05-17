@@ -18,6 +18,11 @@ const ResetPassword = () => {
 	const handleResetPassword = async ({ password }, { setSubmitting }) => {
 		setSubmitting(true);
 		try {
+            const config = {
+                headers: {
+                  "Content-type": "application/json",
+                },
+              };
 			const { status } = await Axios.post(
 				`https://attendancebe.herokuapp.com/api/reset/${resetId}`,
 				{ password },

@@ -16,6 +16,11 @@ const ForgotPassword = () => {
 	const handleForgotPassword = async ({ email }, { setSubmitting }) => {
 		try {
 			setSubmitting(true);
+            const config = {
+                headers: {
+                  "Content-type": "application/json",
+                },
+              };
 			const { data } = await Axios.post(
 				'https://attendancebe.herokuapp.com/api/forgot',
 				{ email },
