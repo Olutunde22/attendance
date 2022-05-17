@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Login, Signup, Lecturer, AddStudent } from "./routes";
+import { Login, Signup, Lecturer, AddStudent, ForgotPassword, ResetPassword } from "./routes";
 import {
   BrowserRouter as Router,
   Route,
@@ -27,6 +27,8 @@ function App() {
           <Redirect exact from="/" to="/login" />
           <Route path="/login" exact component={Login} />
           <Route path="/signup" exact component={Signup} />
+          <Route path="/forgot" exact component={ForgotPassword} />
+          <Route path="/reset/:resetId" component={ResetPassword} />
           <Route path="/addstudent" exact component={AddStudent} />
           <Route path="/lecturer" exact component={Lecturer} />
         </Switch>
