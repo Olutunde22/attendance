@@ -53,7 +53,7 @@ const Signup = () => {
 
   const userInfo = localStorage.getItem("userInfo");
   if (userInfo) {
-    history.push("/lecturer");
+    navigate("/lecturer");
   }
 
   return (
