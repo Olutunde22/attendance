@@ -2,7 +2,6 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import Layout from '../components/Layout';
 
 const ResetPasswordSchema = Yup.object().shape({
 	password: Yup.string().min(6, 'Password is too short').required('Password is Required'),
