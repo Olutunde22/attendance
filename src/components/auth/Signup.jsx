@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { signupFields } from "./formFields";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const SignupSchema = Yup.object().shape({
@@ -65,12 +65,12 @@ const Signup = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
               Login here
-            </a>
+            </Link>
           </p>
         </div>
         <Formik

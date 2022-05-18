@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { loginFields } from './formFields';
 import Axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email('Invalid Email').required('Email is Required'),
@@ -50,9 +50,9 @@ const Login = () => {
 					</h2>
 					<p className="mt-2 text-center text-sm text-gray-600">
 						Or{' '}
-						<a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+						<Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
 							Create an account
-						</a>
+						</Link>
 					</p>
 				</div>
 				<Formik
