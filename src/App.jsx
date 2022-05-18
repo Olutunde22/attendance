@@ -19,13 +19,13 @@ function App() {
 				}
 			>
 				<Routes>
-					<Route path="/" exact component={Login} />
-					<Route path="/login" exact component={Login} />
-					<Route path="/signup" exact component={Signup} />
-					<Route path="/forgot" exact component={ForgotPassword} />
-					<Route path="/reset/:resetId" component={ResetPassword} />
-					<Route path="/addstudent" exact component={AddStudent} />
-					<Route path="/lecturer" exact component={Lecturer} />
+					<Route path="/" exact element={<Login />} />
+					<Route path="/login" exact element={<Login />} />
+					<Route path="/signup" exact element={<Signup />} />
+					<Route path="/forgot" exact element={<ForgotPassword />} />
+					<Route path="/reset/:resetId" element={<ResetPassword />} />
+					<Route path="/addstudent" exact element={<AddStudent />} />
+					<Route path="/lecturer" exact element={<Lecturer />} />
 				</Routes>
 			</Suspense>
 		</Router>
