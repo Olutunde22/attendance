@@ -4,7 +4,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Modal from "./Modal";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import Axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import QRModal from "./QRModal";
 import ViewClass from "./ViewClass";
 import ViewParticipants from "./ViewParticipants";
@@ -19,7 +19,7 @@ function classNames(...classes) {
 const Lecturer = () => {
   const [modal, setModal] = useState(false);
   const [qrModal, setQrModal] = useState(false);
-  let history = useHistory();
+  let navigate = useNavigate();
   const [classes, setClasses] = useState([]);
   const [participants, setParticipants] = useState({});
   const [error, setError] = useState("");
@@ -61,7 +61,7 @@ const Lecturer = () => {
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
     setTimeout(() => {
-      history.push("/");
+      navigate("/");
     }, 1000);
   };
 

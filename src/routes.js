@@ -8,4 +8,6 @@ export const Signup = lazy(() => import('./components/auth/Signup'))
 
 export const Lecturer = lazy(() => import('./components/Lecturer'))
 
+export const ForgotPassword = lazy(() => import('./components/auth/ForgotPassword'))
 
+export const ResetPassword = lazy(() => import('./components/auth/ResetPassword'))
