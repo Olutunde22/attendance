@@ -44,7 +44,7 @@ const Lecturer = () => {
         },
       };
       const { data } = await Axios.get(
-        "https://attendanceqrbe.herokuapp.com/api/getclasses/" + userId,
+        "https://attendancebe.herokuapp.com/api/getclasses/" + userId,
         config
       );
       setClasses(data);
@@ -73,7 +73,7 @@ const Lecturer = () => {
         },
       };
       const { data } = await Axios.get(
-        "https://attendanceqrbe.herokuapp.com/api/getclassparticipants/" +
+        "https://attendancebe.herokuapp.com/api/getclassparticipants/" +
           classId,
         config
       );
