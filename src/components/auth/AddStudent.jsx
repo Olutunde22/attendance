@@ -62,7 +62,7 @@ const AddStudent = () => {
       <div className="max-w-md w-full space-y-8 px-12 bg-white py-8 shadow-lg rounded-xl">
         <div>
           <h2 className="mt-6 text-center text-xl sm:text-3xl font-extrabold text-gray-900">
-            Add new dummy student
+            Add new Student
           </h2>
         </div>
         <Formik
