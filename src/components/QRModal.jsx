@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, useEffect } from "react";
+import { Fragment, useRef, useState, useEffect, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import QrReader from "react-qr-reader";
 import Axios from "axios";
@@ -7,14 +7,18 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
   const [open, setOpen] = useState(modal);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [warning, setWarning] = useState("")
+  const [webcamOpen, setWebCamOpen] = useState(false)
+  const [qrScannerOpen, setQrScannerOpen] = useState(true)
+  const [scan, setScan] = useState(true)
   const cancelButtonRef = useRef(null);
 
   useEffect(() => {
     setOpen(modal);
   }, [modal]);
 
-  const handleScan = async (result) => {
-    if (result) {
+  const handleScan = useCallback(async (result) => {
+    if (result && scan) {
       try {
         const config = {
           headers: {
@@ -26,23 +30,32 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
           { studentId: result, classId },
           config
         );
+
         if (data.message === "Success") {
-          onModalClose(false);
-          getClasses();
-        } else if (data.message === "Student already in class") {
-          setSuccess(data.message);
+          setSuccess('Added student');
           setTimeout(() => {
             setSuccess("");
-          }, 2000);
+          }, 3000);
+          setScan(false)
+          getClasses(true);
         }
       } catch (err) {
-        setError(err.response.data.message);
-        setTimeout(() => {
-          setError("");
-        }, 2000);
+        console.log(err.response.data.message)
+        if (err.response.status === 400) {
+          setWarning(err.response.data.message);
+          setTimeout(() => {
+            setWarning("");
+          }, 3000);
+        }else{
+          setError(err.response.data.message);
+          setTimeout(() => {
+            setError("");
+          }, 3000);
+        }
+
       }
     }
-  };
+  }, [classId, getClasses, scan]);
 
   const handleError = () => {
     setError("Error Couldn't scan Qr Code");
@@ -50,6 +63,37 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
       setError("");
     }, 2000);
   };
+
+  useEffect(() => {
+    let qrcode = "";
+    let interval
+    if (qrScannerOpen) {
+      window.addEventListener('keydown', (e) => {
+        if (interval) {
+          clearInterval(interval)
+        }
+        if (e.code === 'Enter') {
+          if (qrcode) {
+            handleScan(qrcode)
+          }
+          qrcode = ''
+          return
+        }
+        if (e.key !== 'shift') {
+          qrcode += e.key
+          interval = setInterval(() => qrcode + '', 20)
+        }
+      })
+    }
+  }, [handleScan, qrScannerOpen])
+
+  useEffect(() => {
+    if (!scan) {
+      setTimeout(() => {
+        setScan(true)
+      }, 3000);
+    }
+  }, [scan]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -97,27 +141,61 @@ const QRModal = ({ modal, onModalClose, getClasses, classId }) => {
                 ) : null}
 
                 {success ? (
+                  <div className="transform motion-safe:hover:scale-110 flex text-green-700 bg-green-100 py-2 px-4 m-4 rounded">
+                    <div className="text-sm md:text-normal inline">
+                      {success}
+                    </div>{" "}
+                  </div>
+                ) : null}
+
+                {warning ? (
                   <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-yellow-100 py-2 px-4 m-4 rounded">
                     <div className="text-sm md:text-normal inline">
                       {success}
                     </div>{" "}
                   </div>
                 ) : null}
-                  <div className="mt-3 text-center sm:mt-0 mt-2 sm:ml-4 sm:text-left">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg leading-6 font-medium text-gray-900"
-                    >
-                      Scan QR Code
-                    </Dialog.Title>
-                    <div className="mt-4 h-96 w-11/12">
-                      <QrReader
-                        delay={300}
-                        onError={handleError}
-                        onScan={handleScan}
-                        style={{ width: "100%" }}
-                      />
-                    </div>
+                <div className="mt-3 text-center sm:mt-0 mt-2 sm:ml-4 sm:text-left">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg leading-6 font-medium text-gray-900"
+                  >
+                    Scan QR Code
+                  </Dialog.Title>
+                  <div className="flex mt-4">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4" onClick={() => {
+                      if (!webcamOpen) {
+                        setWebCamOpen(true)
+                      }
+
+                      if (qrScannerOpen) {
+                        setQrScannerOpen(false)
+                      }
+
+                    }}>Webcam</button>
+                    <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={() => {
+                      if (webcamOpen) {
+                        setWebCamOpen(false)
+                      }
+
+                      if (!qrScannerOpen) {
+                        setQrScannerOpen(true)
+                      }
+                    }}>Scanner</button>
+                  </div>
+
+                  {webcamOpen && <div className="mt-4 h-96 w-11/12">
+                    <QrReader
+                      delay={300}
+                      onError={handleError}
+                      onScan={handleScan}
+                      style={{ width: "100%" }}
+                    />
+                  </div>}
+
+                  {qrScannerOpen && <div className="mt-4 w-11/12">
+                    Press scanner button to scan qr
+                  </div>}
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 mt-4 sm:px-6 sm:flex sm:flex-row-reverse">

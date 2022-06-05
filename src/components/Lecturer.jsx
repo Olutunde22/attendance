@@ -35,7 +35,7 @@ const Lecturer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewPage]);
 
-  const getClasses = async () => {
+  const getClasses = async (m) => {
     let userId = userInfo.id;
     try {
       const config = {
@@ -48,6 +48,8 @@ const Lecturer = () => {
         config
       );
       setClasses(data);
+      if(m) setQrModal(true)
+      console.log(modal)
     } catch (err) {
       setError(
         "Error Occured while trying to get classes, please refresh page or contact administrator"
