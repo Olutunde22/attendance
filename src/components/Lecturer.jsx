@@ -285,6 +285,7 @@ const Lecturer = () => {
           onModalClose={onModalClose}
           getClasses={getClasses}
           classId={classId}
+          setClasses={setClasses}
         />
         <Modal
           modal={modal}
