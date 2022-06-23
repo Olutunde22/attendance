@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import { Login, Signup, Lecturer, AddStudent, ForgotPassword, ResetPassword } from './routes';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Login, Signup, Lecturer, Student, AddStudent, ForgotPassword, ResetPassword } from './routes';
+import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
 
 function App() {
 	return (
@@ -26,6 +26,7 @@ function App() {
 					<Route path="/reset/:resetId" element={<ResetPassword />} />
 					<Route path="/addstudent" exact element={<AddStudent />} />
 					<Route path="/lecturer" exact element={<Lecturer />} />
+					<Route path="/student/:studentId" element={<Student />} />
 				</Routes>
 			</Suspense>
 		</Router>

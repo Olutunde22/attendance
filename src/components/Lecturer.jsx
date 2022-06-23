@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import QRModal from "./QRModal";
 import ViewClass from "./ViewClass";
 import ViewParticipants from "./ViewParticipants";
+import Search from './Search'
 
 const navigation = [{ name: "Classes", href: "#", current: true }];
 const userNavigation = [{ name: "Your Profile", href: "#" }];
@@ -245,7 +246,10 @@ const Lecturer = () => {
           </div>
         </header>
         <main>
+
+
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <Search />
             <div className="px-4 py-6 sm:px-0">
               {error ? (
                 <div className="transform motion-safe:hover:scale-110 flex text-red-700 bg-red-100 py-2 px-4 m-4 rounded">

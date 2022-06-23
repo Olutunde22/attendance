@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
+import { Link } from "react-router-dom";
 
 const ViewParticipants = ({ setViewPage, participants, className }) => {
   return (
@@ -67,6 +68,7 @@ const ViewParticipants = ({ setViewPage, participants, className }) => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {participants.map((part, index) => (
                   <tr key={index}>
+                  
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="ml-4">
@@ -77,9 +79,9 @@ const ViewParticipants = ({ setViewPage, participants, className }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
+                      <Link to={`/student/${part._id}`} className="text-sm text-blue-500">
                         {part.studentName}
-                      </div>
+                      </Link>
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap">
