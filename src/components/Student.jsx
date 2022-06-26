@@ -50,6 +50,27 @@ const Lecturer = () => {
     }, 1000);
   };
 
+  const getNumberOfClass = (a) => {
+    const index = studentDetails.classTotal.findIndex(
+      (c) => c._id.toLowerCase() === a.toLowerCase()
+    );
+    return studentDetails.classTotal[index].num;
+  };
+
+  const calculateGrade = ({ _id, num }) => {
+    const index = studentDetails.classTotal.findIndex(
+      (c) => c._id.toLowerCase() === _id.toLowerCase()
+    );
+    let totalNum = studentDetails.classTotal[index].num;
+    let grade = Math.round((num / totalNum) * 100);
+    if (grade >= 70 && grade <= 100) return "A";
+    else if (grade >= 60 && grade <= 69) return "B";
+    else if (grade >= 50 && grade <= 59) return "C";
+    else if (grade >= 40 && grade <= 49) return "D";
+    else if (grade >= 0 && grade <= 49) return "F";
+    else return "Invalid result";
+  };
+
   return (
     <>
       {studentDetails && (
@@ -200,23 +221,50 @@ const Lecturer = () => {
           </header>
           <main className=" w-full mx-2 md:w-10/12 md:mx-auto mt-4">
             <h1 className="text-3xl font-bold mt-4 mb-6 text-gray-800">
+              List of Classes you had - {studentDetails.classTotal.length}
+            </h1>
+            <div className="flex">
+              <ul className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
+                {studentDetails.classTotal.map((c) => (
+                  <li className="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                    {c._id}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <h1 className="text-3xl font-bold mt-4 mb-6 text-gray-800">
               List of Classes {studentDetails.student.firstName} attended -{" "}
               {studentDetails.studentAttendance.length}
             </h1>
 
-            {/* {studentDetails.studentAttendance && studentDetails.studentAttendance.length > 0 &&} */}
-            <div className="shadow-md flex bg-white justify-between px-4 py-4">
-              <div>
-                <h1 className="text-2xl font-bold text-blue-500 mb-5 px-2">
-                  Name of Class
-                </h1>
-                <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">Number of times attended: </p>
-                <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">Number of times class held: </p>
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold">Grade</h1>
-              </div>
-            </div>
+            {studentDetails.studentAttendance &&
+            studentDetails.studentAttendance.length > 0 ? (
+              studentDetails.studentAttendance.map((st) => (
+                <div
+                  key={st._id}
+                  className="shadow-md flex bg-white justify-between mt-8 px-4 py-4"
+                >
+                  <div>
+                    <h1 className="text-2xl font-bold text-blue-500 mb-5 px-2">
+                      {st._id}
+                    </h1>
+                    <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
+                      Number of times attended: {st.num}
+                    </p>
+                    <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
+                      Number of times class held: {getNumberOfClass(st._id)}
+                    </p>
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold">{calculateGrade(st)}</h1>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <h1>
+                {studentDetails.student.firstName} did not attend any class
+              </h1>
+            )}
           </main>
         </div>
       )}
