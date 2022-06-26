@@ -6,7 +6,6 @@ const Search = () => {
   const [search, setSearch] = useState("");
   const [studentList, setStudentList] = useState();
   const [loading, setLoading] = useState(false);
-  const [showStudents, setShowStudents] = useState(false);
 
   const handleSearchChange = async (value) => {
     setSearch(value);
@@ -35,8 +34,6 @@ const Search = () => {
       <input
         type="text"
         value={search}
-        onMouseOver={() => setShowStudents(true)}
-        onMouseLeave={() => setShowStudents(false)}
         onChange={(e) => handleSearchChange(e.target.value)}
         className="form-control  block px-3 py-1.5 text-base font-normal text-gray-700   bg-white bg-clip-padding  border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         id="search"
@@ -56,7 +53,6 @@ const Search = () => {
               </div>
             )}
             {!loading &&
-              showStudents &&
               studentList.map((student) => (
                 <li
                   key={student._id}
@@ -69,10 +65,7 @@ const Search = () => {
                 </li>
               ))}
 
-            {!loading &&
-            studentList &&
-            showStudents &&
-            studentList.length === 0 ? (
+            {!loading && studentList && studentList.length === 0 ? (
               <p className="text-base font-bold text-center leading-relaxed mt-2 mb-4 px-2 text-blue-800">
                 No student with this matric number
               </p>
