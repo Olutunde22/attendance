@@ -10,7 +10,6 @@ const Search = () => {
   const handleSearchChange = async (value) => {
     setSearch(value);
     setLoading(true);
-    console.log(value);
     try {
       const config = {
         headers: {
@@ -21,7 +20,6 @@ const Search = () => {
         `https://attendancebe.herokuapp.com/api/students?matricNum=${value}`,
         config
       );
-      console.log(data);
       setStudentList(data);
       setLoading(false);
     } catch (err) {

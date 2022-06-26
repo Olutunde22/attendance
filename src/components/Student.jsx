@@ -17,6 +17,12 @@ const Lecturer = () => {
   const [studentDetails, setStudentDetails] = useState();
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
+  useEffect(() => {
+    if (userInfo === null) {
+      navigate("/login");
+    }
+  }, [userInfo]);
+
   const handleGetStudent = useCallback(async () => {
     try {
       const config = {
@@ -24,25 +30,18 @@ const Lecturer = () => {
           "Content-type": "application/json",
         },
       };
-      if (userInfo) {
-        const { data } = await Axios.get(
-          `https://attendancebe.herokuapp.com/api/student/${studentId}/lecturer/${userInfo.id}`,
-          config
-        );
-        setStudentDetails(data);
-      }
+      const { data } = await Axios.get(
+        `https://attendancebe.herokuapp.com/api/student/${studentId}/lecturer/${userInfo.id}`,
+        config
+      );
+      console.log(data);
+      setStudentDetails(data);
     } catch (err) {}
-  }, [studentId, userInfo]);
+  }, []);
 
   useEffect(() => {
     handleGetStudent();
   }, [handleGetStudent]);
-
-  useEffect(() => {
-    if (userInfo === null) {
-      navigate("/login");
-    }
-  }, [navigate, userInfo]);
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -191,15 +190,33 @@ const Lecturer = () => {
           </Disclosure>
 
           <header className="bg-white shadow">
-            <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
+            <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 font-bold flex justify-between">
               <h1 className="text-3xl font-bold text-gray-900">
-                {studentDetails.matricNumber}
+                {studentDetails.student.firstName}{" "}
+                {studentDetails.student.lastName}
               </h1>
-              {studentDetails.firstName}
+              {studentDetails.student.matricNumber}
             </div>
           </header>
-          <main>
-            <div>Student details shaaaa</div>
+          <main className=" w-full mx-2 md:w-10/12 md:mx-auto mt-4">
+            <h1 className="text-3xl font-bold mt-4 mb-6 text-gray-800">
+              List of Classes {studentDetails.student.firstName} attended -{" "}
+              {studentDetails.studentAttendance.length}
+            </h1>
+
+            {/* {studentDetails.studentAttendance && studentDetails.studentAttendance.length > 0 &&} */}
+            <div className="shadow-md flex bg-white justify-between px-4 py-4">
+              <div>
+                <h1 className="text-2xl font-bold text-blue-500 mb-5 px-2">
+                  Name of Class
+                </h1>
+                <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">Number of times attended: </p>
+                <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">Number of times class held: </p>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold">Grade</h1>
+              </div>
+            </div>
           </main>
         </div>
       )}
