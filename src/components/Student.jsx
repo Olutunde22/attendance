@@ -214,11 +214,11 @@ const Lecturer = () => {
             </div>
           </header>
           <main className=" w-full mx-2 md:w-10/12 md:mx-auto mt-4">
-            <h1 className="text-3xl font-bold mt-4 mb-6 text-gray-800">
+            <h1 className=" text-xl md:text-3xl font-bold mx-2 mt-4 mb-6 text-gray-800">
               List of Classes you had - {studentDetails.classTotal.length}
             </h1>
             <div className="flex">
-              <ul className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
+              <ul className="bg-white rounded-lg border border-gray-200 w-11/12 text-gray-900">
                 {studentDetails.classTotal.map((c) => (
                   <li className="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
                     {c._id}
@@ -226,7 +226,7 @@ const Lecturer = () => {
                 ))}
               </ul>
             </div>
-            <h1 className="text-3xl font-bold mt-4 mb-6 text-gray-800">
+            <h1 className="text-xl md:text-3xl font-bold mx-2 mt-4 mb-6 text-gray-800">
               List of Classes {studentDetails.student.firstName} attended -{" "}
               {studentDetails.studentAttendance.length}
             </h1>
@@ -239,18 +239,18 @@ const Lecturer = () => {
                   className="shadow-md flex bg-white justify-between mt-8 px-4 py-4"
                 >
                   <div>
-                    <h1 className="text-2xl font-bold text-blue-500 mb-5 px-2">
+                    <h1 className="text-lg md:text-2xl font-bold text-blue-500 mb-5 px-2">
                       {st._id}
                     </h1>
-                    <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
+                    <p className="text-sm md:text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
                       Number of times attended: {st.num}
                     </p>
-                    <p className="text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
+                    <p className="text-sm md:text-base font-bold text-center leading-relaxed mt-2 mb-2 px-2 text-gray-800">
                       Number of times class held: {getNumberOfClass(st._id)}
                     </p>
                   </div>
                   <div>
-                    <h1 className="text-4xl font-bold">{calculateGrade(st)}</h1>
+                    <h1 className="text-xl md:text-4xl font-bold">{calculateGrade(st)}</h1>
                   </div>
                 </div>
               ))
