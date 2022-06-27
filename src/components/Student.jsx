@@ -62,13 +62,7 @@ const Lecturer = () => {
       (c) => c._id.toLowerCase() === _id.toLowerCase()
     );
     let totalNum = studentDetails.classTotal[index].num;
-    let grade = Math.round((num / totalNum) * 100);
-    if (grade >= 70 && grade <= 100) return "A";
-    else if (grade >= 60 && grade <= 69) return "B";
-    else if (grade >= 50 && grade <= 59) return "C";
-    else if (grade >= 40 && grade <= 49) return "D";
-    else if (grade >= 0 && grade <= 49) return "F";
-    else return "Invalid result";
+    return `${Math.round((num / totalNum) * 100)}%`;
   };
 
   return (
